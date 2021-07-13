@@ -4,6 +4,7 @@
 .jupyter-server-log.txt
 .local/
 .profile
+.conda/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
