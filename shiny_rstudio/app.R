@@ -52,7 +52,9 @@ ui <- fluidPage(
             radioButtons("disp", "Display",
                          choices = c(Head = "head",
                                      All = "all"),
-                         selected = "head")
+                         selected = "head"), 
+            
+            actionButton("submit", label = "Submit")
             
         ),
         
@@ -86,9 +88,14 @@ server <- function(input, output) {
         
         linearmodel <- lm(dataInput()$y ~ dataInput()$x, data=dataInput())
         
-        output$lmPlot <- renderPlot({
-            plot(dataInput()$x, dataInput()$y, 
-                 abline(linearmodel), cex = 1.3,pch = 16,xlab = "x",ylab = "y" )
+    dataInput <- eventReactive(input$go, )
+    
+    output$lmPlot <- renderPlot({
+        dataInput()
+        plot(dataInput()$x, dataInput()$y, 
+             abline(linearmodel), cex = 1.3,pch = 16,xlab = "x",ylab = "y" )
+        
+    
         })
         
         
