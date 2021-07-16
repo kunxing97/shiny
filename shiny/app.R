@@ -55,7 +55,7 @@ ui <- fluidPage(
                          selected = "head"), 
            
              # Making an action button 
-            actionButton("submit", label = "Submit")
+            actionButton("submit", label = "Model Linear Data")
             
         ),
         
@@ -65,7 +65,8 @@ ui <- fluidPage(
             # Output: Data file ----
             tableOutput("contents"),
             plotOutput("distPlot"),
-            plotOutput("lmPlot")
+            plotOutput("lmPlot"), 
+            uiOutput(outputId = "information")
         )
     )
 )
@@ -91,10 +92,34 @@ server <- function(input, output) {
     
     react <- eventReactive(input$submit, {input$submit})  
     
+    output$information <- renderPrint({
+        linearmodel <- lm(dataInput()$y ~ dataInput()$x, data=dataInput())
+        summary(linearmodel)
+    })
+        
     output$lmPlot <- renderPlot({
+        library(ggplot2)
         react()
-        plot(dataInput()$x, dataInput()$y, 
-        abline(linearmodel), cex = 1.3,pch = 16,xlab = "x",ylab = "y" )
+        # plot(dataInput()$x, dataInput()$y, 
+        # abline(linearmodel), cex = 1.3,pch = 16,xlab = "x",ylab = "y")
+        
+        ggplot(data = dataInput(), aes_string(x = dataInput()$x , y = dataInput()$y)) + 
+            geom_point() +
+            stat_smooth(method = "lm", col = "red") +
+            labs(title = paste("Adj R2 = ",signif(summary(linearmodel)$adj.r.squared, 5),
+                               "Intercept =",signif(linearmodel$coef[[1]],5 ),
+                               " Slope =",signif(linearmodel$coef[[2]], 5),
+                               " P =",signif(summary(linearmodel)$coef[2,4], 5)))
+        
+       
+        # ggplot(linearmodel$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1])) + 
+        #     geom_point() +
+        #     stat_smooth(method = "lm", col = "red") +
+        #     labs(title = paste("Adj R2 = ",signif(summary(fit)$adj.r.squared, 5),
+        #                        "Intercept =",signif(fit$coef[[1]],5 ),
+        #                        " Slope =",signif(fit$coef[[2]], 5),
+        #                        " P =",signif(summary(fit)$coef[2,4], 5)))
+        
     })
         
         
