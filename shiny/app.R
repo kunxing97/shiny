@@ -55,7 +55,7 @@ ui <- fluidPage(
                          selected = "head"), 
            
              # Making an action button 
-            actionButton("submit", label = "Model Linear Data")
+            actionButton("submit", label = "Linear Model")
             
         ),
         
@@ -95,7 +95,7 @@ server <- function(input, output) {
     
     
     output$distPlot <- renderPlot({
-        plot(dataInput()$x, dataInput()$y, xlab = "x",ylab = "y" )
+        plot(dataInput()$x, dataInput()$y, xlab = "x",ylab = "y", main = "Scatter Plot" )
     
     
     # output$information <- renderPrint({
@@ -105,7 +105,7 @@ server <- function(input, output) {
         
     output$lmPlot <- renderPlot({
         plot(dataInput()$x, dataInput()$y, 
-        abline(linmod()), cex = 1.3,pch = 16,xlab = "x",ylab = "y")
+        abline(linmod()), cex = 1.3,pch = 16,xlab = "x",ylab = "y", main = "Linear Model")
         
     output$rsquared <- renderText({
         print(round(summary(linmod())$r.squared, 3))
